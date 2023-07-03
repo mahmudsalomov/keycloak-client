@@ -21,14 +21,14 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.GET, "/test/anonymous", "/test/anonymous/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/test/admin", "/test/admin/**").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET, "/test/user").hasAnyRole(ADMIN, USER)
+        http.authorizeHttpRequests(auth->auth.requestMatchers( "/test/anonymous", "/test/anonymous/**").permitAll()
+                .requestMatchers("/test/admin", "/test/admin/**").hasRole(ADMIN)
+                .requestMatchers("/test/user").hasAnyRole(ADMIN, USER)
                 .anyRequest().authenticated());
 
-        http.oauth2ResourceServer(oauth2->oauth2.jwt().jwtAuthenticationConverter(jwtAuthConverter));
+        http.oauth2ResourceServer(oauth2->oauth2.jwt(jwt->jwt.jwtAuthenticationConverter(jwtAuthConverter)));
 
-        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
         return http.build();
     }
 
